@@ -195,32 +195,32 @@ function App() {
   }
 
   return (
-    <div className="app-shell">
-      <header className="topbar">
-        <div className="row gap-32" style={{ alignItems: 'center' }}>
-          <button className="brand" onClick={() => goto('home')} style={{ background: 'none', border: 'none', color: 'inherit', padding: 0, cursor: 'pointer' }}>
-            <span className="brand-mark"></span> HITCH
+    <div className="grid grid-rows-[64px_1fr] h-screen">
+      <header className="flex items-center justify-between px-7 border-b border-line-soft bg-bg sticky top-0 z-50 md:px-4">
+        <div className="flex items-center gap-8 md:gap-4">
+          <button className="font-bold text-lg tracking-tight inline-flex items-center gap-2.5" onClick={() => goto('home')} style={{ background: 'none', border: 'none', color: 'inherit', padding: 0, cursor: 'pointer' }}>
+            <span className="w-6 h-6 bg-ink rounded flex items-center justify-center relative after:content-[''] after:w-2.5 after:h-2.5 after:bg-accent after:rounded-full"></span> HITCH
           </button>
-          <nav className="nav">
+          <nav className="flex gap-1 items-center md:hidden">
             <NavItem label="Home" active={route.name === 'home'} onClick={() => goto('home')} />
             <NavItem label="Browse" active={route.name === 'browse'} onClick={() => goto('browse')} />
             <NavItem label="Offer" active={route.name === 'offer'} onClick={() => goto('offer')} />
             <NavItem label="My Rides" active={route.name === 'my-rides'} onClick={() => goto('my-rides')} badge={incomingPendingCount} />
           </nav>
         </div>
-        <div className="row gap-8">
-          <button className="icon-btn" onClick={() => setTheme(tweaks.theme === 'dark' ? 'light' : 'dark')} title="Toggle theme">
+        <div className="flex items-center gap-2">
+          <button className="w-9 h-9 rounded border border-line-soft bg-bg-elev text-ink flex items-center justify-center hover:border-ink" onClick={() => setTheme(tweaks.theme === 'dark' ? 'light' : 'dark')} title="Toggle theme">
             {tweaks.theme === 'dark' ? <Icon.Sun /> : <Icon.Moon />}
           </button>
-          <button className="icon-btn" title="Notifications"><Icon.Bell /></button>
-          <button onClick={() => goto('profile')} className="row gap-8" style={{ background: 'transparent', border: '1px solid var(--line-soft)', borderRadius: 4, padding: '4px 4px 4px 12px', cursor: 'pointer' }}>
+          <button className="w-9 h-9 rounded border border-line-soft bg-bg-elev text-ink flex items-center justify-center hover:border-ink" title="Notifications"><Icon.Bell /></button>
+          <button onClick={() => goto('profile')} className="flex items-center gap-2 bg-transparent border border-line-soft rounded py-1 pl-3 pr-1 cursor-pointer" style={{ borderRadius: 4 }}>
             <span style={{ fontSize: 13, fontWeight: 500 }}>{user.name.split(' ')[0]}</span>
             <Avatar user={user} size="sm" />
           </button>
         </div>
       </header>
 
-      <main className="app-body" data-screen-label="App">
+      <main className="overflow-y-auto" data-screen-label="App">
         {body}
       </main>
 
@@ -231,9 +231,9 @@ function App() {
 
 function NavItem({ label, active, onClick, badge }) {
   return (
-    <button className={`nav-link ${active ? 'active' : ''}`} onClick={onClick} style={{ background: 'transparent', border: 'none' }}>
+    <button className={`px-3.5 py-2 rounded text-ink-3 cursor-pointer text-sm font-medium border border-transparent hover:text-ink ${active ? '!text-ink bg-bg-sunk' : ''}`} onClick={onClick} style={{ background: 'transparent', border: 'none' }}>
       {label}
-      {badge > 0 && <span className="dot"></span>}
+      {badge > 0 && <span className="inline-block w-1.5 h-1.5 bg-accent rounded-full ml-1.5 align-middle"></span>}
     </button>
   );
 }

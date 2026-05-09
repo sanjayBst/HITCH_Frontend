@@ -24,48 +24,48 @@ function BrowseScreen({ rides, onOpen }) {
   }, [rides, vt, from, to, q]);
 
   return (
-    <div className="page">
-      <div className="page-header">
+    <div className="max-w-[1240px] mx-auto px-7 pt-10 pb-20 md:px-4 md:pt-6">
+      <div className="flex items-end justify-between mb-8 gap-6 border-b border-line-soft pb-6">
         <div>
-          <div className="eyebrow">Browse · {filtered.length} {filtered.length === 1 ? 'ride' : 'rides'} available</div>
-          <h1 className="page-title">Find a lift.</h1>
-          <div className="page-sub">All rides are posted by KYC-verified members. Filter by vehicle type, neighborhood or destination, then send a request — the driver has 1 hour before departure to accept.</div>
+          <div className="font-mono text-[11px] tracking-widest uppercase text-ink-3">Browse · {filtered.length} {filtered.length === 1 ? 'ride' : 'rides'} available</div>
+          <h1 className="text-[44px] font-semibold tracking-tighter leading-none mt-2 mb-0">Find a lift.</h1>
+          <div className="text-ink-3 text-sm mt-2 max-w-[60ch]">All rides are posted by KYC-verified members. Filter by vehicle type, neighborhood or destination, then send a request — the driver has 1 hour before departure to accept.</div>
         </div>
       </div>
 
-      <div className="filterbar">
-        <div className="row gap-8" style={{ flex: 1, minWidth: 240, alignItems: 'center', borderRight: '1px solid var(--line-soft)', paddingRight: 12, marginRight: 4 }}>
+      <div className="flex gap-2 flex-wrap p-4 bg-bg-elev border border-line-soft rounded-lg mb-6 items-center">
+        <div className="flex items-center gap-2 flex-1 min-w-[240px] border-r border-line-soft pr-3 mr-1">
           <Icon.Search />
-          <input className="input" style={{ border: 'none', background: 'transparent', padding: '6px 0' }} placeholder="Search by place, vehicle…" value={q} onChange={e => setQ(e.target.value)} />
+          <input className="w-full px-0 py-1.5 bg-transparent border-none outline-none focus:ring-0 placeholder:text-ink-4" placeholder="Search by place, vehicle…" value={q} onChange={e => setQ(e.target.value)} />
         </div>
 
-        <button className={`chip ${vt === 'all' ? 'on' : ''}`} onClick={() => setVt('all')}>All vehicles</button>
-        <button className={`chip ${vt === 'four' ? 'on' : ''}`} onClick={() => setVt('four')}><Icon.Car /> Car</button>
-        <button className={`chip ${vt === 'two' ? 'on' : ''}`} onClick={() => setVt('two')}><Icon.Bike /> Bike</button>
+        <button className={`inline-flex items-center gap-1.5 px-[10px] py-[5px] rounded-full border border-line-soft text-[12px] bg-transparent text-ink-2 font-mono tracking-wide cursor-pointer hover:border-ink hover:text-ink ${vt === 'all' ? '!bg-ink !text-bg !border-ink' : ''}`} onClick={() => setVt('all')}>All vehicles</button>
+        <button className={`inline-flex items-center gap-1.5 px-[10px] py-[5px] rounded-full border border-line-soft text-[12px] bg-transparent text-ink-2 font-mono tracking-wide cursor-pointer hover:border-ink hover:text-ink ${vt === 'four' ? '!bg-ink !text-bg !border-ink' : ''}`} onClick={() => setVt('four')}><Icon.Car /> Car</button>
+        <button className={`inline-flex items-center gap-1.5 px-[10px] py-[5px] rounded-full border border-line-soft text-[12px] bg-transparent text-ink-2 font-mono tracking-wide cursor-pointer hover:border-ink hover:text-ink ${vt === 'two' ? '!bg-ink !text-bg !border-ink' : ''}`} onClick={() => setVt('two')}><Icon.Bike /> Bike</button>
 
-        <div style={{ width: 1, height: 24, background: 'var(--line-soft)' }}></div>
+        <div className="w-[1px] h-6 bg-line-soft"></div>
 
-        <div className="row gap-8" style={{ alignItems: 'center' }}>
-          <span className="eyebrow">From</span>
-          <select className="select" value={from} onChange={e => setFrom(e.target.value)} style={{ padding: '6px 10px', borderRadius: 4, border: '1px solid var(--line-soft)', background: 'var(--bg)' }}>
+        <div className="flex items-center gap-2">
+          <span className="font-mono text-[11px] tracking-widest uppercase text-ink-3">From</span>
+          <select className="px-2.5 py-1.5 rounded border border-line-soft bg-bg outline-none" value={from} onChange={e => setFrom(e.target.value)}>
             {HITCH_SEED.placeOptions.map(p => <option key={p}>{p}</option>)}
           </select>
         </div>
-        <div className="row gap-8" style={{ alignItems: 'center' }}>
-          <span className="eyebrow">To</span>
-          <select className="select" value={to} onChange={e => setTo(e.target.value)} style={{ padding: '6px 10px', borderRadius: 4, border: '1px solid var(--line-soft)', background: 'var(--bg)' }}>
+        <div className="flex items-center gap-2">
+          <span className="font-mono text-[11px] tracking-widest uppercase text-ink-3">To</span>
+          <select className="px-2.5 py-1.5 rounded border border-line-soft bg-bg outline-none" value={to} onChange={e => setTo(e.target.value)}>
             {HITCH_SEED.placeOptions.map(p => <option key={p}>{p}</option>)}
           </select>
         </div>
       </div>
 
       {filtered.length === 0 ? (
-        <div className="empty">
-          <h3>No rides match your filters.</h3>
+        <div className="p-[60px_20px] text-center border border-dashed border-line-soft rounded-lg text-ink-3">
+          <h3 className="text-ink mb-2 font-semibold tracking-tight">No rides match your filters.</h3>
           <div>Try clearing them — or be the first to offer this route.</div>
         </div>
       ) : (
-        <div className="col gap-12">
+        <div className="flex flex-col gap-3">
           {filtered.map(r => (
             <RideCard key={r.id} ride={r} onOpen={() => onOpen(r)} />
           ))}

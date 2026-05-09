@@ -61,97 +61,97 @@ function ActiveRideScreen({ match, currentUser, onComplete, onBack }) {
   };
 
   return (
-    <div className="page" style={{ maxWidth: 1240 }}>
-      <button className="btn ghost sm" onClick={onBack} style={{ marginBottom: 14 }}>← Back</button>
+    <div className="max-w-[1240px] mx-auto px-7 pt-10 pb-20 md:px-4 md:pt-6">
+      <button className="btn btn-ghost btn-sm mb-3.5" onClick={onBack}>← Back</button>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: 24, alignItems: 'flex-start' }}>
-        <div className="col gap-20">
-          <div className="card" style={{ padding: 22 }}>
-            <div className="row" style={{ justifyContent: 'space-between', marginBottom: 16 }}>
+      <div className="grid grid-cols-[1.1fr_1fr] gap-6 items-start md:grid-cols-1">
+        <div className="flex flex-col gap-5">
+          <div className="card-base p-[22px]">
+            <div className="flex justify-between mb-4">
               <div>
-                <span className="badge accent">ACTIVE RIDE</span>
-                <h2 style={{ margin: '12px 0 4px', fontSize: 28, letterSpacing: '-0.02em', fontWeight: 600 }}>
-                  {ride.from} <span style={{ color: 'var(--ink-3)', fontWeight: 400 }}>→</span> {ride.to}
+                <span className="badge-base bg-accent text-accent-ink">ACTIVE RIDE</span>
+                <h2 className="m-0 mt-3 mb-1 text-[28px] tracking-tight font-semibold">
+                  {ride.from} <span className="text-ink-3 font-normal">→</span> {ride.to}
                 </h2>
-                <div style={{ color: 'var(--ink-3)', fontSize: 13 }}>
+                <div className="text-ink-3 text-[13px]">
                   {HITCH_FMT_DATE(ride.departAt)} · {HITCH_FMT_TIME(ride.departAt)} · {ride.vehicleModel}
                 </div>
               </div>
-              <div className="col" style={{ alignItems: 'flex-end' }}>
-                <div className="eyebrow">Vehicle</div>
-                <div className="mono" style={{ padding: '6px 10px', border: '1px solid var(--ink)', borderRadius: 4, fontSize: 13, marginTop: 6 }}>{ride.vehicleNo}</div>
+              <div className="flex flex-col items-end">
+                <div className="font-mono text-[11px] tracking-widest uppercase text-ink-3">Vehicle</div>
+                <div className="font-mono px-2.5 py-1.5 border border-ink rounded text-[13px] mt-1.5 tracking-wider">{ride.vehicleNo}</div>
               </div>
             </div>
 
-            <div className="route" style={{ marginBottom: 18 }}>
-              <div className="nodes">
-                <div className="node-line"></div>
-                <div className="node-dot"></div>
-                <div className="node-dot end"></div>
+            <div className="grid grid-cols-[14px_1fr] gap-x-3.5 mb-4.5">
+              <div className="grid grid-rows-[auto_auto] gap-[18px] relative">
+                <div className="absolute top-3.5 bottom-3.5 left-1 w-[1px] bg-[repeating-linear-gradient(to_bottom,var(--ink-4)_0_4px,transparent_4px_8px)]"></div>
+                <div className="w-2.5 h-2.5 rounded-full bg-ink mt-1.5 relative z-10"></div>
+                <div className="w-2.5 h-2.5 rounded-full bg-accent border border-ink mt-1.5 relative z-10"></div>
               </div>
-              <div className="col gap-12">
-                <div><div className="place">{ride.from}</div><div className="place-meta">Pickup: {match.pickup}</div></div>
-                <div><div className="place">{ride.to}</div><div className="place-meta">{ride.toMeta}</div></div>
+              <div className="flex flex-col gap-3">
+                <div><div className="text-base font-medium tracking-tight">{ride.from}</div><div className="font-mono text-[11px] text-ink-3 tracking-wider uppercase mt-0.5">Pickup: {match.pickup}</div></div>
+                <div><div className="text-base font-medium tracking-tight">{ride.to}</div><div className="font-mono text-[11px] text-ink-3 tracking-wider uppercase mt-0.5">{ride.toMeta}</div></div>
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <div className="grid grid-cols-2 gap-3">
               <CompleteTile label={iAmDriver ? 'You (driver)' : 'You (rider)'} done={myCompleted} self />
               <CompleteTile label={`${them.name.split(' ')[0]} (${iAmDriver ? 'rider' : 'driver'})`} done={theyCompleted} />
             </div>
 
-            <div style={{ marginTop: 16 }}>
-              <button className={`btn block lg ${myCompleted ? '' : 'primary'}`} onClick={handleComplete} disabled={myCompleted}>
+            <div className="mt-4">
+              <button className={`btn btn-block btn-lg ${myCompleted ? '' : 'btn-primary'}`} onClick={handleComplete} disabled={myCompleted}>
                 {myCompleted ? <>Marked complete · waiting for {them.name.split(' ')[0]}</> : <>Complete ride <Icon.Check /></>}
               </button>
-              <div style={{ fontSize: 12, color: 'var(--ink-3)', textAlign: 'center', marginTop: 8 }}>
+              <div className="text-[12px] text-ink-3 text-center mt-2">
                 Chat closes and the connection breaks once both sides confirm.
               </div>
             </div>
           </div>
 
-          <div className="card" style={{ padding: 22 }}>
-            <div className="eyebrow" style={{ marginBottom: 12 }}>Co-rider</div>
-            <div className="row gap-12" style={{ alignItems: 'center' }}>
+          <div className="card-base p-[22px]">
+            <div className="font-mono text-[11px] tracking-widest uppercase text-ink-3 mb-3">Co-rider</div>
+            <div className="flex items-center gap-3">
               <Avatar user={them} size="lg" />
-              <div className="col flex-1">
-                <div style={{ fontWeight: 600, fontSize: 16 }}>{them.name}</div>
-                <div style={{ color: 'var(--ink-3)', fontSize: 13 }} className="row gap-8">
-                  <span className="row gap-4"><Icon.Star /> <span className="mono">{them.rating?.toFixed?.(1)}</span></span>
+              <div className="flex flex-col flex-1">
+                <div className="font-semibold text-base">{them.name}</div>
+                <div className="text-ink-3 text-[13px] flex items-center gap-2">
+                  <span className="flex items-center gap-1"><Icon.Star /> <span className="font-mono">{them.rating?.toFixed?.(1)}</span></span>
                   <span>·</span><span>{them.rides} rides</span>
                 </div>
               </div>
-              <button className="icon-btn" title="Call"><Icon.Phone /></button>
+              <button className="w-9 h-9 rounded border border-line-soft bg-bg-elev text-ink flex items-center justify-center hover:border-ink" title="Call"><Icon.Phone /></button>
             </div>
           </div>
         </div>
 
-        <div className="chat-frame">
-          <div className="chat-head">
+        <div className="flex flex-col border border-line-soft rounded-lg bg-bg h-[600px] overflow-hidden">
+          <div className="p-[18px_22px] border-b border-line-soft flex items-center gap-3">
             <Avatar user={them} />
-            <div className="col" style={{ lineHeight: 1.2 }}>
-              <div style={{ fontWeight: 600 }}>{them.name}</div>
-              <div className="row gap-6" style={{ fontSize: 11, color: 'var(--ink-3)' }}>
-                <span style={{ width: 6, height: 6, background: 'var(--ok)', borderRadius: 999 }}></span>
-                <span className="mono">ENCRYPTED · ACTIVE UNTIL COMPLETION</span>
+            <div className="flex flex-col" style={{ lineHeight: 1.2 }}>
+              <div className="font-semibold">{them.name}</div>
+              <div className="flex items-center gap-1.5 text-[11px] text-ink-3">
+                <span className="w-1.5 h-1.5 bg-ok rounded-full"></span>
+                <span className="font-mono">ENCRYPTED · ACTIVE UNTIL COMPLETION</span>
               </div>
             </div>
           </div>
-          <div className="chat-body" ref={bodyRef}>
+          <div className="flex-1 overflow-y-auto p-5 flex flex-col gap-3" ref={bodyRef}>
             {messages.map(m => {
-              if (m.who === 'system') return <div key={m.id} className="bubble system">{m.text}</div>;
+              if (m.who === 'system') return <div key={m.id} className="text-[11px] font-mono tracking-widest uppercase text-ink-3 text-center my-3 py-1.5 border-y border-line-soft bg-bg-elev">{m.text}</div>;
               const me = m.who === currentUser.id;
               return (
-                <div key={m.id} className={`bubble ${me ? 'me' : 'them'}`}>
+                <div key={m.id} className={`max-w-[85%] p-[10px_14px] rounded-lg text-sm leading-relaxed ${me ? 'bg-ink text-bg self-end rounded-br-none' : 'bg-bg-elev text-ink border border-line-soft self-start rounded-bl-none'}`}>
                   <div>{m.text}</div>
-                  {m.ts && <div className="meta">{m.ts}</div>}
+                  {m.ts && <div className="font-mono text-[10px] text-ink-3 mt-1 uppercase tracking-wider">{m.ts}</div>}
                 </div>
               );
             })}
           </div>
-          <div className="chat-input">
-            <input className="input" placeholder="Type a message…" value={draft} onChange={e => setDraft(e.target.value)} onKeyDown={e => e.key === 'Enter' && send()} />
-            <button className="btn ink" onClick={send}><Icon.Send /></button>
+          <div className="p-3.5 border-t border-line-soft flex gap-2">
+            <input className="input-base flex-1" placeholder="Type a message…" value={draft} onChange={e => setDraft(e.target.value)} onKeyDown={e => e.key === 'Enter' && send()} />
+            <button className="btn btn-ink" onClick={send}><Icon.Send /></button>
           </div>
         </div>
       </div>
@@ -161,17 +161,12 @@ function ActiveRideScreen({ match, currentUser, onComplete, onBack }) {
 
 function CompleteTile({ label, done, self }) {
   return (
-    <div style={{
-      padding: 14,
-      border: '1px solid ' + (done ? 'var(--ok)' : 'var(--line-soft)'),
-      borderRadius: 4,
-      background: done ? 'color-mix(in oklab, var(--ok) 8%, var(--bg-elev))' : 'var(--bg-elev)',
-    }}>
-      <div className="eyebrow">{label}</div>
-      <div className="row gap-8" style={{ marginTop: 6, alignItems: 'center' }}>
+    <div className={`p-3.5 border rounded ${done ? 'border-ok bg-[color-mix(in_oklab,var(--ok)_8%,var(--bg-elev))]' : 'border-line-soft bg-bg-elev'}`}>
+      <div className="font-mono text-[11px] tracking-widest uppercase text-ink-3">{label}</div>
+      <div className="flex items-center gap-2 mt-1.5">
         {done
-          ? <span className="row gap-6" style={{ color: 'var(--ok)', fontWeight: 600 }}><Icon.Check /> Completed</span>
-          : <span style={{ color: 'var(--ink-3)' }}>Pending</span>}
+          ? <span className="flex items-center gap-1.5 text-ok font-semibold"><Icon.Check /> Completed</span>
+          : <span className="text-ink-3">Pending</span>}
       </div>
     </div>
   );

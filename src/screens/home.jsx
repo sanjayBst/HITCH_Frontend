@@ -10,41 +10,44 @@ function HomeScreen({ user, rides, mySlots, requests, activeMatches, onGoto, onO
   const nearby = rides.slice(0, 3);
 
   return (
-    <div className="page">
-      <div className="page-header">
+    <div className="max-w-[1240px] mx-auto px-7 pt-10 pb-20 md:px-4 md:pt-6">
+      <div className="flex items-end justify-between mb-8 gap-6 border-b border-line-soft pb-6">
         <div>
-          <div className="eyebrow">Hello, {user.name.split(' ')[0]}</div>
-          <h1 className="page-title">Where to today?</h1>
-          <div className="page-sub">{new Date().toLocaleDateString([], { weekday: 'long', day: 'numeric', month: 'long' })} · You have {activeMatches.length} active {activeMatches.length === 1 ? 'ride' : 'rides'} and {requests.filter(r => r.driverId === user.id && r.status === 'pending').length} new {requests.filter(r => r.driverId === user.id && r.status === 'pending').length === 1 ? 'request' : 'requests'}.</div>
+          <div className="font-mono text-[11px] tracking-widest uppercase text-ink-3">Hello, {user.name.split(' ')[0]}</div>
+          <h1 className="text-[44px] font-semibold tracking-tighter leading-none mt-2 mb-0">Where to today?</h1>
+          <div className="text-ink-3 text-sm mt-2 max-w-[60ch]">{new Date().toLocaleDateString([], { weekday: 'long', day: 'numeric', month: 'long' })} · You have {activeMatches.length} active {activeMatches.length === 1 ? 'ride' : 'rides'} and {requests.filter(r => r.driverId === user.id && r.status === 'pending').length} new {requests.filter(r => r.driverId === user.id && r.status === 'pending').length === 1 ? 'request' : 'requests'}.</div>
         </div>
-        <div className="row gap-8">
+        <div className="flex items-center gap-2">
           <button className="btn" onClick={() => onGoto('browse')}><Icon.Search /> Find a lift</button>
-          <button className="btn primary" onClick={() => onGoto('offer')}><Icon.Plus /> Offer a ride</button>
+          <button className="btn btn-primary" onClick={() => onGoto('offer')}><Icon.Plus /> Offer a ride</button>
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, marginBottom: 32 }}>
-        <div className="stat"><div className="v">{user.rides || 0}</div><div className="l">Rides shared</div></div>
-        <div className="stat"><div className="v">{(user.rating || 5).toFixed(1)}</div><div className="l">Your rating</div></div>
-        <div className="stat"><div className="v">{mySlots.length}</div><div className="l">Slots offered</div></div>
-        <div className="stat"><div className="v">2.4<span style={{ fontSize: 16, color: 'var(--ink-3)', marginLeft: 4 }}>t</span></div><div className="l">CO₂ saved</div></div>
+      <div className="grid grid-cols-4 gap-3 mb-8">
+        <div className="p-5 border border-line-soft rounded-lg bg-bg-elev"><div className="text-[32px] font-semibold tracking-tight font-mono">{user.rides || 0}</div><div className="font-mono text-[11px] tracking-widest uppercase text-ink-3 mt-1">Rides shared</div></div>
+        <div className="p-5 border border-line-soft rounded-lg bg-bg-elev"><div className="text-[32px] font-semibold tracking-tight font-mono">{(user.rating || 5).toFixed(1)}</div><div className="font-mono text-[11px] tracking-widest uppercase text-ink-3 mt-1">Your rating</div></div>
+        <div className="p-5 border border-line-soft rounded-lg bg-bg-elev"><div className="text-[32px] font-semibold tracking-tight font-mono">{mySlots.length}</div><div className="font-mono text-[11px] tracking-widest uppercase text-ink-3 mt-1">Slots offered</div></div>
+        <div className="p-5 border border-line-soft rounded-lg bg-bg-elev"><div className="text-[32px] font-semibold tracking-tight font-mono">2.4<span className="text-base text-ink-3 ml-1">t</span></div><div className="font-mono text-[11px] tracking-widest uppercase text-ink-3 mt-1">CO₂ saved</div></div>
       </div>
 
       {activeMatches.length > 0 && (
-        <section style={{ marginBottom: 32 }}>
-          <div className="section-head"><h2>Active rides</h2><span className="badge accent">LIVE</span></div>
-          <div className="col gap-12">
+        <section className="mb-8">
+          <div className="flex items-baseline justify-between mb-4">
+            <h2 className="text-[22px] font-semibold tracking-tight m-0">Active rides</h2>
+            <span className="badge-base bg-accent text-accent-ink">LIVE</span>
+          </div>
+          <div className="flex flex-col gap-3">
             {activeMatches.map(m => {
               const them = HITCH_USER_BY_ID(m.ride.driverId === user.id ? m.riderId : m.ride.driverId);
               return (
-                <div key={m.id} className="card" style={{ padding: 22, cursor: 'pointer' }} onClick={() => onOpenMatch(m)}>
-                  <div className="row gap-16" style={{ alignItems: 'center' }}>
+                <div key={m.id} className="card-base p-[22px] cursor-pointer" onClick={() => onOpenMatch(m)}>
+                  <div className="flex items-center gap-4">
                     <Avatar user={them} />
-                    <div className="col flex-1">
-                      <div style={{ fontWeight: 600 }}>{m.ride.from} → {m.ride.to}</div>
-                      <div style={{ fontSize: 13, color: 'var(--ink-3)' }}>With {them?.name} · {HITCH_FMT_TIME(m.ride.departAt)} · {m.ride.vehicleModel}</div>
+                    <div className="flex flex-col flex-1">
+                      <div className="font-semibold">{m.ride.from} → {m.ride.to}</div>
+                      <div className="text-[13px] text-ink-3">With {them?.name} · {HITCH_FMT_TIME(m.ride.departAt)} · {m.ride.vehicleModel}</div>
                     </div>
-                    <span className="badge accent">CHAT OPEN</span>
+                    <span className="badge-base bg-accent text-accent-ink">CHAT OPEN</span>
                     <Icon.ArrowRight />
                   </div>
                 </div>
@@ -54,12 +57,12 @@ function HomeScreen({ user, rides, mySlots, requests, activeMatches, onGoto, onO
         </section>
       )}
 
-      <section style={{ marginBottom: 32 }}>
-        <div className="section-head">
-          <h2>Nearby slots</h2>
-          <button className="btn ghost sm" onClick={() => onGoto('browse')}>See all <Icon.ArrowRight /></button>
+      <section className="mb-8">
+        <div className="flex items-baseline justify-between mb-4">
+          <h2 className="text-[22px] font-semibold tracking-tight m-0">Nearby slots</h2>
+          <button className="btn btn-ghost btn-sm" onClick={() => onGoto('browse')}>See all <Icon.ArrowRight /></button>
         </div>
-        <div className="col gap-12">
+        <div className="flex flex-col gap-3">
           {nearby.map(r => <RideCard key={r.id} ride={r} onOpen={() => onOpenRide(r)} />)}
         </div>
       </section>
