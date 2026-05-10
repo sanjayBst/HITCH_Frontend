@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { Icon } from '../components/SharedComponents';
+import hitchMark from '../assets/hitch-mark.svg';
 
 function LandingScreen({ onGetStarted }) {
   const scope = useRef();
@@ -38,8 +39,8 @@ function LandingScreen({ onGetStarted }) {
             Hitch connects verified Pilots with curious Voyagers heading the same way. It's safe, social, and 100% non-commercial.
           </p>
           <div className="flex flex-wrap items-center gap-4">
-            <button 
-              className="btn btn-primary btn-lg px-10 text-lg h-[56px] shadow-[0_4px_20px_rgba(215,255,58,0.2)] hover:shadow-[0_4px_25px_rgba(215,255,58,0.4)]" 
+            <button
+              className="btn btn-primary btn-lg px-10 text-lg h-[56px] shadow-[0_4px_20px_rgba(215,255,58,0.2)] hover:shadow-[0_4px_25px_rgba(215,255,58,0.4)]"
               onClick={onGetStarted}
             >
               Get Started <Icon.ArrowRight />
@@ -109,7 +110,9 @@ function LandingScreen({ onGetStarted }) {
       <footer className="py-24 bg-bg border-t border-line-soft">
         <div className="max-w-[1240px] mx-auto px-7 flex justify-between items-center md:flex-col md:gap-8">
           <div className="flex flex-col gap-4">
-            <div className="font-bold text-3xl tracking-tighter inline-flex items-center gap-2"><span className="w-4 h-4 bg-ink rounded relative after:content-[''] after:w-1.5 after:h-1.5 after:bg-accent after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:rounded-full"></span> HITCH</div>
+            <div className="font-bold text-[42px] tracking-tighter inline-flex items-center gap-3">
+              <img src={hitchMark} alt="Hitch Logo" className="w-10 h-10" /> HITCH
+            </div>
             <div className="text-ink-4 text-sm font-medium">© 2026 Hitch Technologies. All rights reserved.</div>
           </div>
           <div className="flex gap-10 text-[15px] font-medium text-ink-3">
