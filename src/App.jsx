@@ -12,6 +12,7 @@ import RideDetailScreen from './screens/ride-detail';
 import MyRidesScreen from './screens/my-rides';
 import ActiveRideScreen from './screens/active';
 import ProfileScreen from './screens/profile';
+import LandingScreen from './screens/landing';
 
 
 
@@ -30,6 +31,7 @@ function App() {
   const [requests, setRequests] = useState([]);
   const [activeMatches, setActiveMatches] = useState([]);
   const [seedReqId, setSeedReqId] = useState(null);
+  const [showAuth, setShowAuth] = useState(false);
   const container = useRef();
 
   useGSAP(() => {
@@ -85,10 +87,6 @@ function App() {
       setSeedReqId(seedReq.id);
     }
   }, [user]);
-
-  if (!user) {
-    return <AuthScreen onLogin={u => { setUser(u); setRoute({ name: 'home' }); }} />;
-  }
 
   // ---- handlers ----
   const goto = (name, payload) => setRoute({ name, payload });
@@ -170,7 +168,7 @@ function App() {
   };
 
   // ---- nav badge counts ----
-  const incomingPendingCount = requests.filter(r => r.driverId === user.id && r.status === 'pending').length;
+  const incomingPendingCount = user ? requests.filter(r => r.driverId === user.id && r.status === 'pending').length : 0;
 
   // ---- Tweaks panel ----
   const tweaksPanel = (
@@ -189,7 +187,14 @@ function App() {
 
   // ---- Render route ----
   let body;
-  if (route.name === 'home') {
+
+  if (!user) {
+    if (showAuth) {
+      body = <AuthScreen onLogin={(u) => { setUser(u); setShowAuth(false); }} theme={tweaks.theme} setTheme={setTheme} onBack={() => setShowAuth(false)} />;
+    } else {
+      body = <LandingScreen onGetStarted={() => setShowAuth(true)} />;
+    }
+  } else if (route.name === 'home') {
     body = <HomeScreen
       user={user} rides={rides} mySlots={mySlots} requests={requests} activeMatches={activeMatches}
       onGoto={goto}
@@ -221,21 +226,31 @@ function App() {
         </div>
 
         <nav className="flex gap-1 items-center md:absolute md:left-1/2 md:-translate-x-1/2">
-          <NavItem label="Home" active={route.name === 'home'} onClick={() => goto('home')} />
-          <NavItem label="Explore" active={route.name === 'browse'} onClick={() => goto('browse')} />
-          <NavItem label="Offer" active={route.name === 'offer'} onClick={() => goto('offer')} />
-          <NavItem label="Activity" active={route.name === 'my-rides'} onClick={() => goto('my-rides')} badge={incomingPendingCount} />
+          <NavItem label="Home" active={route.name === 'home' && user} onClick={() => user ? goto('home') : setShowAuth(false)} />
+          <NavItem label="Explore" active={route.name === 'browse'} onClick={() => user ? goto('browse') : setShowAuth(true)} />
+          {user && (
+            <>
+              <NavItem label="Offer" active={route.name === 'offer'} onClick={() => goto('offer')} />
+              <NavItem label="Activity" active={route.name === 'my-rides'} onClick={() => goto('my-rides')} badge={incomingPendingCount} />
+            </>
+          )}
         </nav>
 
         <div className="flex items-center gap-2">
-          <button className="w-9 h-9 rounded border border-line-soft bg-bg-elev text-ink flex items-center justify-center hover:border-ink" onClick={() => setTheme(tweaks.theme === 'dark' ? 'light' : 'dark')} title="Toggle theme">
-            {tweaks.theme === 'dark' ? <Icon.Sun /> : <Icon.Moon />}
-          </button>
-          <button className="w-9 h-9 rounded border border-line-soft bg-bg-elev text-ink flex items-center justify-center hover:border-ink" title="Notifications"><Icon.Bell /></button>
-          <button onClick={() => goto('profile')} className="flex items-center gap-2 bg-transparent border border-line-soft rounded py-1 pl-3 pr-1 cursor-pointer" style={{ borderRadius: 4 }}>
-            <span style={{ fontSize: 13, fontWeight: 500 }}>{user.name.split(' ')[0]}</span>
-            <Avatar user={user} size="sm" />
-          </button>
+          {!user ? (
+            <button className="btn btn-primary btn-sm" onClick={() => setShowAuth(true)}>Join / Login</button>
+          ) : (
+            <>
+              <button className="w-9 h-9 rounded border border-line-soft bg-bg-elev text-ink flex items-center justify-center hover:border-ink" onClick={() => setTheme(tweaks.theme === 'dark' ? 'light' : 'dark')} title="Toggle theme">
+                {tweaks.theme === 'dark' ? <Icon.Sun /> : <Icon.Moon />}
+              </button>
+              <button className="w-9 h-9 rounded border border-line-soft bg-bg-elev text-ink flex items-center justify-center hover:border-ink" title="Notifications"><Icon.Bell /></button>
+              <button onClick={() => goto('profile')} className="flex items-center gap-2 bg-transparent border border-line-soft rounded py-1 pl-3 pr-1 cursor-pointer" style={{ borderRadius: 4 }}>
+                <span style={{ fontSize: 13, fontWeight: 500 }}>{user.name.split(' ')[0]}</span>
+                <Avatar user={user} size="sm" />
+              </button>
+            </>
+          )}
         </div>
       </header>
 
