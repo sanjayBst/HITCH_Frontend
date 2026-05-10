@@ -1,11 +1,30 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import { Icon, Avatar, VehicleIcon } from './SharedComponents';
 import { HITCH_USER_BY_ID, HITCH_FMT_TIME, HITCH_FMT_DATE, HITCH_FMT_REL } from '../utils/data';
 
 export function RideCard({ ride, onOpen, badge }) {
   const driver = HITCH_USER_BY_ID(ride.driverId);
+  const cardRef = useRef();
+
+  const { contextSafe } = useGSAP({ scope: cardRef });
+
+  const onMouseEnter = contextSafe(() => {
+    gsap.to(cardRef.current, { y: -4, shadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)", duration: 0.3, ease: "power2.out" });
+    gsap.to(".ride-card-arrow", { x: 4, duration: 0.3, ease: "power2.out" });
+  });
+
+  const onMouseLeave = contextSafe(() => {
+    gsap.to(cardRef.current, { y: 0, shadow: "none", duration: 0.3, ease: "power2.out" });
+    gsap.to(".ride-card-arrow", { x: 0, duration: 0.3, ease: "power2.out" });
+  });
+
   return (
-    <div className="card-base p-[22px] grid grid-cols-[1fr_auto] gap-5 cursor-pointer transition-all hover:border-ink" onClick={onOpen}>
+    <div ref={cardRef} className="card-base p-[22px] grid grid-cols-[1fr_auto] gap-5 cursor-pointer transition-colors hover:border-ink" 
+         onClick={onOpen}
+         onMouseEnter={onMouseEnter}
+         onMouseLeave={onMouseLeave}>
       <div className="flex flex-col">
         <div className="flex items-center gap-3 mb-3.5">
           <Avatar user={driver} />
@@ -51,7 +70,7 @@ export function RideCard({ ride, onOpen, badge }) {
           <div className="text-[28px] font-semibold tracking-tight font-mono tabular-nums">{HITCH_FMT_TIME(ride.departAt)}</div>
           <div className="font-mono text-[11px] text-ink-3 mt-0.5">{HITCH_FMT_REL(ride.departAt)}</div>
         </div>
-        <button className="btn btn-ink btn-sm">View <Icon.ArrowRight /></button>
+        <button className="btn btn-ink btn-sm">View <Icon.ArrowRight className="ride-card-arrow" /></button>
       </div>
     </div>
   );

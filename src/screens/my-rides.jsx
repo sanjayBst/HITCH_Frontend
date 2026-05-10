@@ -17,9 +17,9 @@ function MyRidesScreen({ requests, mySlots, onAccept, onReject, onOpenChat, curr
     <div className="max-w-[1240px] mx-auto px-7 pt-10 pb-20 md:px-4 md:pt-6">
       <div className="flex items-end justify-between mb-8 gap-6 border-b border-line-soft pb-6">
         <div>
-          <div className="font-mono text-[11px] tracking-widest uppercase text-ink-3">My Rides</div>
+          <div className="font-mono text-[11px] tracking-widest uppercase text-ink-3">My Journeys</div>
           <h1 className="text-[44px] font-semibold tracking-tighter leading-none mt-2 mb-0">Your activity.</h1>
-          <div className="text-ink-3 text-sm mt-2 max-w-[60ch]">Manage requests, slots you've offered, and pending matches. Once both sides confirm, chat opens for the duration of the ride.</div>
+          <div className="text-ink-3 text-sm mt-2 max-w-[60ch]">Manage connections, slots you've offered, and pending matches. Once both sides confirm, chat opens for the duration of the journey.</div>
         </div>
       </div>
 
@@ -31,7 +31,7 @@ function MyRidesScreen({ requests, mySlots, onAccept, onReject, onOpenChat, curr
 
       {tab === 'incoming' && (
         incoming.length === 0
-          ? <div className="p-[60px_20px] text-center border border-dashed border-line-soft rounded-lg text-ink-3"><h3 className="text-ink mb-2 font-semibold tracking-tight">No incoming requests yet.</h3><div>When riders request your slots they'll appear here.</div></div>
+          ? <div className="p-[60px_20px] text-center border border-dashed border-line-soft rounded-lg text-ink-3"><h3 className="text-ink mb-2 font-semibold tracking-tight">No join requests yet.</h3><div>When Voyagers request to join your journey, they'll appear here.</div></div>
           : <div className="flex flex-col gap-3">{incoming.map(req => <IncomingCard key={req.id} req={req} onAccept={() => onAccept(req)} onReject={() => onReject(req)} />)}</div>
       )}
 
@@ -52,7 +52,7 @@ function MyRidesScreen({ requests, mySlots, onAccept, onReject, onOpenChat, curr
 
 function IncomingCard({ req, onAccept, onReject }) {
   const ride = req.ride;
-  const rider = HITCH_USER_BY_ID(req.riderId) || { name: 'Rider', initials: 'R', rating: 5, rides: 1, verified: true };
+  const rider = HITCH_USER_BY_ID(req.riderId) || { name: 'Voyager', initials: 'V', rating: 5, rides: 1, verified: true };
   return (
     <div className="card-base p-[22px]">
       <div className="flex items-start gap-4 mb-3.5">

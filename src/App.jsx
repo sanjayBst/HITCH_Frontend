@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import { Icon, Avatar, ToastHost } from './components/SharedComponents';
 import { useTweaks, TweaksPanel, TweakSection, TweakRadio, TweakColor } from './components/TweaksPanel';
 import { HITCH_SEED } from './utils/data';
@@ -28,6 +30,21 @@ function App() {
   const [requests, setRequests] = useState([]);
   const [activeMatches, setActiveMatches] = useState([]);
   const [seedReqId, setSeedReqId] = useState(null);
+  const container = useRef();
+
+  useGSAP(() => {
+    // Animate everything inside the main page content
+    gsap.fromTo(".page-content", 
+      { opacity: 0 }, 
+      { opacity: 1, duration: 0.3, ease: "power1.inOut" }
+    );
+    
+    // Subtle staggered slide-up for immediate children
+    gsap.fromTo(".page-content > div > section, .page-content > div > div", 
+      { opacity: 0, y: 15 }, 
+      { opacity: 1, y: 0, duration: 0.5, stagger: 0.08, ease: "power2.out", delay: 0.1 }
+    );
+  }, { dependencies: [route.name], scope: container });
 
   // Apply theme
   useEffect(() => {
@@ -195,19 +212,21 @@ function App() {
   }
 
   return (
-    <div className="grid grid-rows-[64px_1fr] h-screen">
+    <div ref={container} className="grid grid-rows-[64px_1fr] h-screen">
       <header className="flex items-center justify-between px-7 border-b border-line-soft bg-bg sticky top-0 z-50 md:px-4">
-        <div className="flex items-center gap-8 md:gap-4">
-          <button className="font-bold text-lg tracking-tight inline-flex items-center gap-2.5" onClick={() => goto('home')} style={{ background: 'none', border: 'none', color: 'inherit', padding: 0, cursor: 'pointer' }}>
-            <span className="w-6 h-6 bg-ink rounded flex items-center justify-center relative after:content-[''] after:w-2.5 after:h-2.5 after:bg-accent after:rounded-full"></span> HITCH
+        <div className="flex items-center">
+          <button className="inline-flex items-center gap-2.5 bg-transparent border-none p-0 cursor-pointer text-inherit" onClick={() => goto('home')}>
+            <HitchLogo className="h-8 w-auto" />
           </button>
-          <nav className="flex gap-1 items-center md:hidden">
-            <NavItem label="Home" active={route.name === 'home'} onClick={() => goto('home')} />
-            <NavItem label="Browse" active={route.name === 'browse'} onClick={() => goto('browse')} />
-            <NavItem label="Offer" active={route.name === 'offer'} onClick={() => goto('offer')} />
-            <NavItem label="My Rides" active={route.name === 'my-rides'} onClick={() => goto('my-rides')} badge={incomingPendingCount} />
-          </nav>
         </div>
+
+        <nav className="flex gap-1 items-center md:absolute md:left-1/2 md:-translate-x-1/2">
+          <NavItem label="Home" active={route.name === 'home'} onClick={() => goto('home')} />
+          <NavItem label="Explore" active={route.name === 'browse'} onClick={() => goto('browse')} />
+          <NavItem label="Offer" active={route.name === 'offer'} onClick={() => goto('offer')} />
+          <NavItem label="Activity" active={route.name === 'my-rides'} onClick={() => goto('my-rides')} badge={incomingPendingCount} />
+        </nav>
+
         <div className="flex items-center gap-2">
           <button className="w-9 h-9 rounded border border-line-soft bg-bg-elev text-ink flex items-center justify-center hover:border-ink" onClick={() => setTheme(tweaks.theme === 'dark' ? 'light' : 'dark')} title="Toggle theme">
             {tweaks.theme === 'dark' ? <Icon.Sun /> : <Icon.Moon />}
@@ -220,7 +239,7 @@ function App() {
         </div>
       </header>
 
-      <main className="overflow-y-auto" data-screen-label="App">
+      <main className="overflow-y-auto page-content" data-screen-label="App">
         {body}
       </main>
 
@@ -231,10 +250,20 @@ function App() {
 
 function NavItem({ label, active, onClick, badge }) {
   return (
-    <button className={`px-3.5 py-2 rounded text-ink-3 cursor-pointer text-sm font-medium border border-transparent hover:text-ink ${active ? '!text-ink bg-bg-sunk' : ''}`} onClick={onClick} style={{ background: 'transparent', border: 'none' }}>
+    <button className={`px-3.5 py-2 rounded text-ink-3 cursor-pointer text-sm font-medium border border-transparent transition-colors hover:text-ink ${active ? '!text-ink bg-bg-sunk' : ''}`} onClick={onClick}>
       {label}
       {badge > 0 && <span className="inline-block w-1.5 h-1.5 bg-accent rounded-full ml-1.5 align-middle"></span>}
     </button>
+  );
+}
+
+function HitchLogo({ className }) {
+  return (
+    <svg viewBox="0 0 420 120" className={className} xmlns="http://www.w3.org/2000/svg" style={{ height: '32px' }}>
+      <rect x="2" y="2" width="116" height="116" rx="24" fill="#0B0B0B" stroke="var(--color-ink)" strokeWidth="4" strokeOpacity="0.6" />
+      <circle cx="84" cy="84" r="16" fill="var(--color-accent)" />
+      <text x="150" y="95" fill="var(--color-ink)" style={{ fontSize: '72px', fontWeight: '800', letterSpacing: '-0.05em', fontFamily: 'var(--font-sans)' }}>HITCH</text>
+    </svg>
   );
 }
 

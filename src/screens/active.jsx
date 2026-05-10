@@ -96,8 +96,8 @@ function ActiveRideScreen({ match, currentUser, onComplete, onBack }) {
             </div>
 
             <div className="grid grid-cols-2 gap-3">
-              <CompleteTile label={iAmDriver ? 'You (driver)' : 'You (rider)'} done={myCompleted} self />
-              <CompleteTile label={`${them.name.split(' ')[0]} (${iAmDriver ? 'rider' : 'driver'})`} done={theyCompleted} />
+              <CompleteTile label={iAmDriver ? 'You (Pilot)' : 'You (Voyager)'} done={myCompleted} self />
+              <CompleteTile label={`${them.name.split(' ')[0]} (${iAmDriver ? 'Voyager' : 'Pilot'})`} done={theyCompleted} />
             </div>
 
             <div className="mt-4">
@@ -111,7 +111,7 @@ function ActiveRideScreen({ match, currentUser, onComplete, onBack }) {
           </div>
 
           <div className="card-base p-[22px]">
-            <div className="font-mono text-[11px] tracking-widest uppercase text-ink-3 mb-3">Co-rider</div>
+            <div className="font-mono text-[11px] tracking-widest uppercase text-ink-3 mb-3">Voyager</div>
             <div className="flex items-center gap-3">
               <Avatar user={them} size="lg" />
               <div className="flex flex-col flex-1">

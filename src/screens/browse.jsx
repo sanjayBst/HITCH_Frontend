@@ -27,9 +27,9 @@ function BrowseScreen({ rides, onOpen }) {
     <div className="max-w-[1240px] mx-auto px-7 pt-10 pb-20 md:px-4 md:pt-6">
       <div className="flex items-end justify-between mb-8 gap-6 border-b border-line-soft pb-6">
         <div>
-          <div className="font-mono text-[11px] tracking-widest uppercase text-ink-3">Browse · {filtered.length} {filtered.length === 1 ? 'ride' : 'rides'} available</div>
+          <div className="font-mono text-[11px] tracking-widest uppercase text-ink-3">Explore · {filtered.length} {filtered.length === 1 ? 'journey' : 'journeys'} available</div>
           <h1 className="text-[44px] font-semibold tracking-tighter leading-none mt-2 mb-0">Find a lift.</h1>
-          <div className="text-ink-3 text-sm mt-2 max-w-[60ch]">All rides are posted by KYC-verified members. Filter by vehicle type, neighborhood or destination, then send a request — the driver has 1 hour before departure to accept.</div>
+          <div className="text-ink-3 text-sm mt-2 max-w-[60ch]">All journeys are posted by KYC-verified members. Filter by vehicle type, neighborhood or destination, then send a request — the pilot has 1 hour before departure to accept.</div>
         </div>
       </div>
 
@@ -61,7 +61,7 @@ function BrowseScreen({ rides, onOpen }) {
 
       {filtered.length === 0 ? (
         <div className="p-[60px_20px] text-center border border-dashed border-line-soft rounded-lg text-ink-3">
-          <h3 className="text-ink mb-2 font-semibold tracking-tight">No rides match your filters.</h3>
+          <h3 className="text-ink mb-2 font-semibold tracking-tight">No journeys match your filters.</h3>
           <div>Try clearing them — or be the first to offer this route.</div>
         </div>
       ) : (
