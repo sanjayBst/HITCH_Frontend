@@ -138,10 +138,10 @@
 .footer-glow {
   position: relative;
   overflow: hidden;
-  transition: border-top-color 0.4s ease, box-shadow 0.4s ease !important;
+  transition: border-top-color 0.5s ease !important;
 }
 
-/* 1. Backdrop dynamic glow behind contents */
+/* 1. Ultra-subtle, high-end ambient warmth trail */
 .footer-glow::before {
   content: '';
   position: absolute;
@@ -149,18 +149,18 @@
   pointer-events: none;
   z-index: 1;
   background: radial-gradient(
-    280px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    rgba(215, 255, 58, 0.12),
-    transparent 80%
+    450px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(215, 255, 58, 0.035),
+    transparent 75%
   );
   opacity: 0;
-  transition: opacity 0.4s ease;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .footer-glow:hover::before {
   opacity: 1;
 }
 
-/* 2. Sleek active 1px top border exactly matching mouse coordinate */
+/* 2. Sleek, high-precision laser top border beam */
 .footer-glow::after {
   content: '';
   position: absolute;
@@ -171,12 +171,13 @@
   pointer-events: none;
   z-index: 2;
   background: radial-gradient(
-    180px circle at var(--mouse-x, 50%) 0px,
+    150px circle at var(--mouse-x, 50%) 0px,
     var(--color-accent),
+    rgba(215, 255, 58, 0.4) 30%,
     transparent 80%
   );
   opacity: 0;
-  transition: opacity 0.4s ease;
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .footer-glow:hover::after {
   opacity: 1;

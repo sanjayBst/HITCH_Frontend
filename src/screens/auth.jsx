@@ -13,6 +13,88 @@ function AuthScreen({ onLogin }) {
   });
   const toast = useToast();
 
+  const [currentCalendarDate, setCurrentCalendarDate] = useState(new Date());
+  const [showCalendarDropdown, setShowCalendarDropdown] = useState(false);
+  const [showGenderDropdown, setShowGenderDropdown] = useState(false);
+
+  const genderOptions = [
+    { value: 'female', label: 'Female' },
+    { value: 'male', label: 'Male' },
+    { value: 'nonbinary', label: 'Non-binary' },
+    { value: 'undisclosed', label: 'Prefer not to say' }
+  ];
+
+  const handlePrevMonth = () => {
+    setCurrentCalendarDate(prev => {
+      const d = new Date(prev);
+      d.setMonth(d.getMonth() - 1);
+      return d;
+    });
+  };
+
+  const handleNextMonth = () => {
+    setCurrentCalendarDate(prev => {
+      const d = new Date(prev);
+      d.setMonth(d.getMonth() + 1);
+      return d;
+    });
+  };
+
+  const handleYearChange = (year) => {
+    setCurrentCalendarDate(prev => {
+      const d = new Date(prev);
+      d.setFullYear(year);
+      return d;
+    });
+  };
+
+  const handleMonthChange = (month) => {
+    setCurrentCalendarDate(prev => {
+      const d = new Date(prev);
+      d.setMonth(month);
+      return d;
+    });
+  };
+
+  const getCalendarDays = () => {
+    const year = currentCalendarDate.getFullYear();
+    const month = currentCalendarDate.getMonth();
+    
+    const firstDay = new Date(year, month, 1);
+    const startingDayOfWeek = firstDay.getDay();
+    
+    const totalDays = new Date(year, month + 1, 0).getDate();
+    const prevMonthTotalDays = new Date(year, month, 0).getDate();
+    
+    const days = [];
+    
+    for (let i = startingDayOfWeek - 1; i >= 0; i--) {
+      const d = prevMonthTotalDays - i;
+      const mStr = String(month === 0 ? 12 : month).padStart(2, '0');
+      const yVal = month === 0 ? year - 1 : year;
+      days.push({
+        day: d,
+        isCurrentMonth: false,
+        dateString: `${yVal}-${mStr}-${String(d).padStart(2, '0')}`
+      });
+    }
+    
+    for (let i = 1; i <= totalDays; i++) {
+      days.push({
+        day: i,
+        isCurrentMonth: true,
+        dateString: `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`
+      });
+    }
+    
+    return days;
+  };
+
+  const handleSelectDay = (dateStr) => {
+    set('dob', dateStr);
+    setShowCalendarDropdown(false);
+  };
+
   const set = (k, v) => setData(d => ({ ...d, [k]: v }));
 
   const submitLogin = (e) => {
@@ -91,18 +173,138 @@ function AuthScreen({ onLogin }) {
                   <input className="input-base" placeholder="Anya Kowalski" value={data.name} onChange={e => set('name', e.target.value)} />
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="flex flex-col gap-1.5 flex-1">
+                  <div className="flex flex-col gap-1.5 flex-1 relative">
                     <label className="font-mono text-[11px] tracking-widest uppercase text-ink-3">Date of birth</label>
-                    <input className="input-base" type="date" value={data.dob} onChange={e => set('dob', e.target.value)} />
+                    <div 
+                      className="relative flex items-center cursor-pointer" 
+                      onClick={() => { setShowCalendarDropdown(!showCalendarDropdown); setShowGenderDropdown(false); }}
+                    >
+                      <Icon.Calendar className="absolute left-3 w-4 h-4 text-ink-3 pointer-events-none transition-colors" />
+                      <input 
+                        type="text" 
+                        value={data.dob ? HITCH_FMT_DATE(data.dob) : 'Select birthday'} 
+                        readOnly 
+                        className="input-base pl-9 cursor-pointer w-full text-sm outline-none focus:border-accent"
+                      />
+                    </div>
+
+                    {showCalendarDropdown && (
+                      <div className="absolute top-[105%] left-0 z-[300] bg-bg-elev border border-line-soft rounded-2xl shadow-[0_12px_35px_-5px_rgba(0,0,0,0.45),_0_0_20px_rgba(var(--color-accent),0.05)] p-4 flex flex-col gap-3.5 backdrop-blur-md animate-[slideDown_0.2s_ease-out] w-[320px]" onClick={e => e.stopPropagation()}>
+                        
+                        {/* Calendar Navigation Header */}
+                        <div className="flex items-center justify-between border-b border-line-soft pb-2.5">
+                          
+                          {/* Month Selector dropdown */}
+                          <select 
+                            value={currentCalendarDate.getMonth()} 
+                            onChange={e => handleMonthChange(parseInt(e.target.value))}
+                            className="bg-bg border border-line-soft rounded-lg px-2 py-1 text-xs outline-none focus:border-accent text-ink font-semibold"
+                          >
+                            {['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].map((m, idx) => (
+                              <option key={m} value={idx}>{m}</option>
+                            ))}
+                          </select>
+
+                          {/* Year Selector dropdown */}
+                          <select 
+                            value={currentCalendarDate.getFullYear()} 
+                            onChange={e => handleYearChange(parseInt(e.target.value))}
+                            className="bg-bg border border-line-soft rounded-lg px-2 py-1 text-xs outline-none focus:border-accent text-ink font-semibold"
+                          >
+                            {Array.from({ length: 90 }, (_, i) => 2026 - i).map(y => (
+                              <option key={y} value={y}>{y}</option>
+                            ))}
+                          </select>
+
+                          {/* Nav Buttons */}
+                          <div className="flex gap-1">
+                            <button 
+                              type="button" 
+                              onClick={handlePrevMonth}
+                              className="w-7 h-7 rounded-lg border border-line-soft hover:border-ink flex items-center justify-center transition-colors cursor-pointer bg-bg-sunk"
+                            >
+                              <Icon.ArrowRight className="rotate-180 w-3 h-3 text-ink-3" />
+                            </button>
+                            <button 
+                              type="button" 
+                              onClick={handleNextMonth}
+                              className="w-7 h-7 rounded-lg border border-line-soft hover:border-ink flex items-center justify-center transition-colors cursor-pointer bg-bg-sunk"
+                            >
+                              <Icon.ArrowRight className="w-3 h-3 text-ink-3" />
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Weekdays Row */}
+                        <div className="grid grid-cols-7 gap-1 text-center">
+                          {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(day => (
+                            <div key={day} className="font-mono text-[9px] text-ink-4 uppercase tracking-widest font-bold py-1">{day}</div>
+                          ))}
+                        </div>
+
+                        {/* Days Grid */}
+                        <div className="grid grid-cols-7 gap-1 text-center">
+                          {getCalendarDays().map((d, index) => {
+                            const isSelected = data.dob === d.dateString;
+                            return (
+                              <button
+                                type="button"
+                                key={index}
+                                onClick={() => handleSelectDay(d.dateString)}
+                                className={`h-7 rounded-lg text-xs font-semibold flex items-center justify-center transition-all cursor-pointer ${
+                                  isSelected 
+                                    ? 'bg-accent text-accent-ink font-bold shadow-[0_0_8px_var(--color-accent)] scale-[1.05]' 
+                                    : d.isCurrentMonth
+                                      ? 'text-ink hover:bg-bg-sunk'
+                                      : 'text-ink-4 opacity-40 hover:bg-bg-sunk'
+                                }`}
+                              >
+                                {d.day}
+                              </button>
+                            );
+                          })}
+                        </div>
+
+                      </div>
+                    )}
                   </div>
-                  <div className="flex flex-col gap-1.5 flex-1">
+                  <div className="flex flex-col gap-1.5 flex-1 relative">
                     <label className="font-mono text-[11px] tracking-widest uppercase text-ink-3">Gender</label>
-                    <select className="input-base" value={data.gender} onChange={e => set('gender', e.target.value)}>
-                      <option value="female">Female</option>
-                      <option value="male">Male</option>
-                      <option value="nonbinary">Non-binary</option>
-                      <option value="undisclosed">Prefer not to say</option>
-                    </select>
+                    <div 
+                      className="relative flex items-center cursor-pointer" 
+                      onClick={() => { setShowGenderDropdown(!showGenderDropdown); setShowCalendarDropdown(false); }}
+                    >
+                      <Icon.User className="absolute left-3 w-4 h-4 text-ink-3 pointer-events-none transition-colors" />
+                      <input 
+                        type="text" 
+                        value={genderOptions.find(o => o.value === data.gender)?.label || 'Select gender'} 
+                        readOnly 
+                        className="input-base pl-9 cursor-pointer w-full text-sm outline-none focus:border-accent"
+                      />
+                    </div>
+
+                    {showGenderDropdown && (
+                      <div className="absolute top-[105%] left-0 right-0 z-[300] bg-bg-elev border border-line-soft rounded-2xl shadow-[0_12px_35px_-5px_rgba(0,0,0,0.45)] p-2.5 flex flex-col gap-1 backdrop-blur-md animate-[slideDown_0.2s_ease-out] w-full" onClick={e => e.stopPropagation()}>
+                        {genderOptions.map(option => {
+                          const isSelected = data.gender === option.value;
+                          return (
+                            <button
+                              type="button"
+                              key={option.value}
+                              onClick={() => { set('gender', option.value); setShowGenderDropdown(false); }}
+                              className={`w-full py-2.5 px-3 rounded-xl text-[13px] font-semibold text-left transition-all cursor-pointer flex items-center justify-between ${
+                                isSelected 
+                                  ? 'bg-ink text-bg' 
+                                  : 'text-ink hover:bg-bg-sunk'
+                              }`}
+                            >
+                              <span>{option.label}</span>
+                              {isSelected && <Icon.Check className="w-4 h-4 text-accent" />}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="flex flex-col gap-1.5">

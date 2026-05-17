@@ -58,9 +58,19 @@ function App() {
     document.documentElement.setAttribute('data-theme', tweaks.theme);
   }, [tweaks.theme]);
 
-  // Apply accent
+  // Apply accent and calculate contrast text color dynamically
   useEffect(() => {
-    document.documentElement.style.setProperty('--accent', tweaks.accent);
+    document.documentElement.style.setProperty('--color-accent', tweaks.accent);
+    
+    // Calculate YIQ relative luminance for contrast color
+    const h = tweaks.accent.replace('#', '');
+    const r = parseInt(h.substring(0, 2), 16);
+    const g = parseInt(h.substring(2, 4), 16);
+    const b = parseInt(h.substring(4, 6), 16);
+    const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+    const contrastColor = (yiq >= 150) ? '#0f0f0e' : '#ffffff';
+    
+    document.documentElement.style.setProperty('--color-accent-ink', contrastColor);
   }, [tweaks.accent]);
 
   const setTheme = (t) => setTweak('theme', t);
@@ -227,7 +237,7 @@ function App() {
   } else if (route.name === 'active') {
     body = <ActiveRideScreen match={route.payload} currentUser={user} onComplete={handleCompleteRide} onBack={() => goto('home')} />;
   } else if (route.name === 'profile') {
-    body = <ProfileScreen user={user} onLogout={() => setUser(null)} theme={tweaks.theme} setTheme={setTheme} />;
+    body = <ProfileScreen user={user} onLogout={() => setUser(null)} tweaks={tweaks} setTweak={setTweak} onUpdateUser={setUser} />;
   }
 
   return (

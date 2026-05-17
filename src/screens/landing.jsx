@@ -107,6 +107,21 @@ function LandingScreen({ onGetStarted }) {
               <img src={hitchMark} alt="Hitch Logo" className="w-10 h-10" /> HITCH
             </div>
             <div className="text-ink-4 text-sm font-medium">© 2026 Hitch Technologies. All rights reserved.</div>
+            
+            {/* Made with Love Signature (Beautifully Accented Capsule) */}
+            <div className="flex items-center gap-1.5 px-3.5 py-1.5 bg-bg-elev border border-line-soft/60 rounded-full font-mono text-[11px] text-ink-3 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)] mt-2">
+              <span>Made with</span>
+              <span className="text-[#FF6A3D] animate-[pulse_1.2s_infinite] inline-block font-sans text-xs">❤️</span>
+              <span>by</span>
+              <a 
+                href="https://github.com/sanjaybst" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-ink hover:text-accent font-semibold transition-colors duration-200"
+              >
+                sanjayBst
+              </a>
+            </div>
           </div>
           <div className="flex gap-10 text-[15px] font-medium text-ink-3 justify-center">
             <a href="#" className="hover:text-accent transition-colors">About</a>

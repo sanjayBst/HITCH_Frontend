@@ -255,9 +255,19 @@ function TweaksPanel({ title = 'Tweaks', noDeckControls = false, children }) {
       if (t === '__activate_edit_mode') setOpen(true);
       else if (t === '__deactivate_edit_mode') setOpen(false);
     };
+    const onKeyDown = (e) => {
+      if (e.ctrlKey && e.key.toLowerCase() === 'q') {
+        e.preventDefault();
+        setOpen((o) => !o);
+      }
+    };
     window.addEventListener('message', onMsg);
+    window.addEventListener('keydown', onKeyDown);
     window.parent.postMessage({ type: '__edit_mode_available' }, '*');
-    return () => window.removeEventListener('message', onMsg);
+    return () => {
+      window.removeEventListener('message', onMsg);
+      window.removeEventListener('keydown', onKeyDown);
+    };
   }, []);
 
   const dismiss = () => {
