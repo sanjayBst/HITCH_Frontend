@@ -13,6 +13,7 @@
   --color-line-soft: #d7d2c5;
   --color-accent: #d7ff3a;
   --color-accent-ink: #0f0f0e;
+  --color-text-glow: #0f0f0e;
   --color-danger: #e8492c;
   --color-ok: #1f8a5b;
 
@@ -43,6 +44,7 @@
     --color-line-soft: #2a2925;
     --color-accent: #d7ff3a;
     --color-accent-ink: #0f0f0e;
+    --color-text-glow: #d7ff3a;
   }
 
   body {
@@ -112,13 +114,70 @@
     @apply w-9 h-9 rounded-full bg-ink text-bg inline-flex items-center justify-center font-semibold text-[13px] shrink-0;
   }
 
-  /* Premium Yellow Glow Effects */
-  .bento-card {
-    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  /* Premium Universal Hover Glow System */
+  .card-glow, .card-base {
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
   }
-  .bento-card:hover {
+  .card-glow:hover, .card-base:hover {
     border-color: var(--color-accent) !important;
-    box-shadow: 0 10px 40px -10px rgba(215, 255, 58, 0.35), 0 0 25px 2px rgba(215, 255, 58, 0.2);
-    transform: translateY(-4px);
+    box-shadow: 0 10px 40px -12px rgba(215, 255, 58, 0.25), 0 0 20px 2px rgba(215, 255, 58, 0.15) !important;
+    transform: translateY(-3px) !important;
   }
+}
+
+/* Custom utility to hide visual scrollbars while preserving smooth scroll */
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+}
+.no-scrollbar {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+/* Dynamic Spotlight Mouse Tracking Glow for the Footer */
+.footer-glow {
+  position: relative;
+  overflow: hidden;
+  transition: border-top-color 0.4s ease, box-shadow 0.4s ease !important;
+}
+
+/* 1. Backdrop dynamic glow behind contents */
+.footer-glow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(
+    280px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(215, 255, 58, 0.12),
+    transparent 80%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.footer-glow:hover::before {
+  opacity: 1;
+}
+
+/* 2. Sleek active 1px top border exactly matching mouse coordinate */
+.footer-glow::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  pointer-events: none;
+  z-index: 2;
+  background: radial-gradient(
+    180px circle at var(--mouse-x, 50%) 0px,
+    var(--color-accent),
+    transparent 80%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.footer-glow:hover::after {
+  opacity: 1;
 }
