@@ -16,14 +16,7 @@ function LandingScreen({ onGetStarted }) {
 
   return (
     <div ref={scope} className="min-h-screen bg-bg text-ink overflow-x-hidden relative">
-      {/* Background Pattern with mask to clear center text area */}
-      <div
-        className="absolute inset-0 bg-[radial-gradient(var(--color-ink)_1px,transparent_1px)] [background-size:40px_40px] opacity-[0.06] pointer-events-none"
-        style={{
-          maskImage: 'radial-gradient(circle at 25% 35%, transparent 10%, black 60%)',
-          WebkitMaskImage: 'radial-gradient(circle at 25% 35%, transparent 10%, black 60%)'
-        }}
-      ></div>
+
 
       {/* Hero Section */}
       <section className="relative max-w-[1240px] mx-auto px-7 pt-12 pb-20 grid grid-cols-[1.2fr_1fr] gap-12 items-center md:grid-cols-1 md:pt-8 md:pb-16">
@@ -108,14 +101,14 @@ function LandingScreen({ onGetStarted }) {
 
       {/* Footer */}
       <footer className="py-24 bg-bg border-t border-line-soft">
-        <div className="max-w-[1240px] mx-auto px-7 flex justify-between items-center md:flex-col md:gap-8">
-          <div className="flex flex-col gap-4">
-            <div className="font-bold text-[42px] tracking-tighter inline-flex items-center gap-3">
+        <div className="max-w-[1240px] mx-auto px-7 flex flex-col items-center text-center gap-8">
+          <div className="flex flex-col items-center gap-4">
+            <div className="font-bold text-[42px] tracking-tighter inline-flex items-center gap-3 justify-center">
               <img src={hitchMark} alt="Hitch Logo" className="w-10 h-10" /> HITCH
             </div>
             <div className="text-ink-4 text-sm font-medium">© 2026 Hitch Technologies. All rights reserved.</div>
           </div>
-          <div className="flex gap-10 text-[15px] font-medium text-ink-3">
+          <div className="flex gap-10 text-[15px] font-medium text-ink-3 justify-center">
             <a href="#" className="hover:text-accent transition-colors">About</a>
             <a href="#" className="hover:text-accent transition-colors">Safety</a>
             <a href="#" className="hover:text-accent transition-colors">Terms</a>
